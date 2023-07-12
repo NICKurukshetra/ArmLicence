@@ -31,7 +31,12 @@ namespace ArmLicence
             lblprint.Text = print.ToString();
             lblpending.Text = pendprint.ToString();
 
-            // var data = (from u in d select new { u.UIN, Name = u.name, Father = u.fname });
+            var today = d.Where(i => i.printDate == DateTime.Now);
+
+            var data = (from u in today select new { UIN=u.UIN, Name = u.name, Father = u.fname,Address=u.address });
+
+            GridView1.DataSource = data;
+            GridView1.DataBind();
 
 
 

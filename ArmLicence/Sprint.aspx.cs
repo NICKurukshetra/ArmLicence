@@ -27,26 +27,29 @@ namespace ArmLicence
                 var i = Session["uin"].ToString();
                 var d = db.tblweaponholder.Where(u => u.UIN == i).ToList();
 
-                lbllicno.Text = d[0].licNo;
-                lblname.Text = d[0].name;
-                lblfname.Text = d[0].fname;
-                lblarea.Text = d[0].area;
-                lbladd.Text = d[0].address;
-                lbldoi.Text = d[0].issueDate;
-                lbldoe.Text = d[0].expiryDate;
-                lbluin.Text = d[0].UIN;
-                img = d[0].photo;
-                sig = d[0].sign;
-
-               
-
-                if (img != null)
+                if (d.Count > 0)
                 {
-                    string base64String = Convert.ToBase64String(img, 0, img.Length);
-                    Image1.ImageUrl = "data:image/png;base64," + base64String;
-                    string base64String1 = Convert.ToBase64String(sig, 0, sig.Length);
-                    Image2.ImageUrl = "data:image/png;base64," + base64String1;
-                   
+                    lbllicno.Text = d[0].licNo;
+                    lblname.Text = d[0].name;
+                    lblfname.Text = d[0].fname;
+                    lblarea.Text = d[0].area;
+                    lbladd.Text = d[0].address;
+                    lbldoi.Text = d[0].issueDate;
+                    lbldoe.Text = d[0].expiryDate;
+                    lbluin.Text = d[0].UIN;
+                    img = d[0].photo;
+                    sig = d[0].sign;
+
+
+
+                    if (img != null)
+                    {
+                        string base64String = Convert.ToBase64String(img, 0, img.Length);
+                        Image1.ImageUrl = "data:image/png;base64," + base64String;
+                        string base64String1 = Convert.ToBase64String(sig, 0, sig.Length);
+                        Image2.ImageUrl = "data:image/png;base64," + base64String1;
+
+                    }
                 }
 
                 //Literal1.Text = "<img src='img/" + d[0].UIN.ToString() + ".jpg' width='200' height='237' />";
@@ -61,11 +64,15 @@ namespace ArmLicence
                 {
                     String authid = Session["AuthId"].ToString();
                     var auth = db.AuthorityMas.Where(t => t.Authorityid == authid).ToList();
-                    authsign = auth[0].sign;
-                    string base64Str = Convert.ToBase64String(authsign, 0, authsign.Length);
-                    Image4.ImageUrl = "data:image/png;base64," + base64Str;
+                    if (auth.Count > 0)
+                    {
+                        authsign = auth[0].sign;
+                        string base64Str = Convert.ToBase64String(authsign, 0, authsign.Length);
+                        Image4.ImageUrl = "data:image/png;base64," + base64Str;
 
-                    lblauthority.Text = auth[0].AuthorityName;
+                    
+                        lblauthority.Text = auth[0].AuthorityName;
+                    }
                 }
 
                 else

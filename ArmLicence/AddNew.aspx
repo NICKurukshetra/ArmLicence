@@ -1,5 +1,19 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddNew.aspx.cs" Inherits="ArmLicence.AddNew" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <script>
+        // Use datepicker on the date inputs
+        $("input[type=date]").datepicker({
+            dateFormat: 'yy-mm-dd',
+            onSelect: function (dateText, inst) {
+                $(inst).val(dateText); // Write the value in the input
+            }
+        });
+
+        // Code below to avoid the classic date-picker
+        $("input[type=date]").on('click', function () {
+            return false;
+        });
+    </script>
     <main id="main" class="main">
 
     <div class="pagetitle">
@@ -14,7 +28,7 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Add New Holder Data</h5>
+              <h5 class="card-title">Add Holder Data</h5>
                  <asp:Label ID="lblerror" runat="server" Text="" CssClass="text-bg-danger"></asp:Label>
               <!-- No Labels Form -->
               <div class="row g-3">
@@ -23,7 +37,7 @@
                       <label for="inputNanme4" class="form-label">UIN No (18 Digits)</label>
                   
                   
-                  <input type="number" class="form-control"  id="uin" runat="server" maxlength="4" required>
+                  <input type="number" class="form-control"  id="uin" runat="server"  onkeypress="if(this.value.length==18) return false;" required>
                 </div>
                 <div class="col-md-6">
                     <label for="inputNanme4" class="form-label">License No</label>
@@ -43,7 +57,7 @@
                 </div>
                 <div class="col-md-4">
                      <label for="inputNanme4" class="form-label">Mobile (10 Digit)</label>
-                  <input type="number" class="form-control" runat="server" id="mobile" required>
+                  <input type="number" class="form-control" runat="server" id="mobile"  onkeypress="if(this.value.length==10) return false;" required>
                 </div>
                 <div class="col-md-4">
                        <label for="inputNanme4" class="form-label">Area of Validity</label>
@@ -65,11 +79,11 @@
                 </div>
                    <div class="col-md-6">
                        <label for="inputNanme4" class="form-label">Date of Issue (DD/MM/YYYY)</label>
-                  <input  class="form-control"  runat="server" id="doi" required>
+                  <input  class="form-control" type="date" runat="server" id="doi" required>
                 </div>
                 <div class="col-md-6">
                      <label for="inputNanme4" class="form-label">Date of Expiry (DD/MM/YYYY)</label>
-                 <input  class="form-control"  runat="server" id="doe" required>
+                 <input  class="form-control"  type="date" runat="server" id="doe" required>
                 </div>
                 
                    

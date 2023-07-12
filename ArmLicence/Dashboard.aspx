@@ -6,7 +6,7 @@
       <h1>Dashboard</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item active">Dashboard</li>
         </ol>
       </nav>
@@ -30,9 +30,9 @@
                       <h6>Filter</h6>
                     </li>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
+                 <%--   <li><a class="dropdown-item" href="#">Today</a></li>
                     <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>--%>
                   </ul>
                 </div>
 
@@ -41,7 +41,7 @@
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-cart"></i>
+                      <i class="bi bi-journal-arrow-up"></i>
                     </div>
                     <div class="ps-3">
                       <h6>
@@ -66,9 +66,7 @@
                       <h6>Filter</h6>
                     </li>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                   
                   </ul>
                 </div>
 
@@ -77,7 +75,7 @@
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
+                      <i class="bi bi-card-checklist"></i>
                     </div>
                     <div class="ps-3">
                       <h6>
@@ -103,9 +101,7 @@
                       <h6>Filter</h6>
                     </li>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                    
                   </ul>
                 </div>
 
@@ -114,7 +110,7 @@
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people"></i>
+                      <i class="bi bi-clipboard-minus-fill"></i>
                     </div>
                     <div class="ps-3">
                       <h6>
@@ -149,7 +145,14 @@
                 <div class="card-body">
                   <h5 class="card-title">Reports <span>/Today</span></h5>
 
-                    <asp:GridView ID="GridView1" runat="server" CssClass="table table-secondary"></asp:GridView>
+                    <asp:GridView ID="GridView1" runat="server" CssClass="table table-secondary">
+
+
+                        <EmptyDataTemplate>
+
+                            No Record Found
+                        </EmptyDataTemplate>
+                    </asp:GridView>
 
               </div>
                       </form>

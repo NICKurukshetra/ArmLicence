@@ -111,7 +111,7 @@ namespace ArmLicence
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText doi;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl doi;
 
         /// <summary>
         /// doe control.
@@ -120,7 +120,7 @@ namespace ArmLicence
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText doe;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl doe;
 
         /// <summary>
         /// weapon control.

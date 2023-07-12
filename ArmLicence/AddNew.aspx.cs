@@ -104,70 +104,78 @@ namespace ArmLicence
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-
-            if(uin.Value.Length!=18)
+            try
             {
-                lblerror.Text = "Error saving Record !! UIN No Should be 18 Digits";
 
-                return;
-
-            }
-
-            if(getuid(uin.Value))
-            {
-                lblerror.Text = "Error saving Record !! UIN No Already Exist";
-
-                return;
-
-            }
-            List<tblweapon> tbl = new List<tblweapon>();
-            foreach (GridViewRow dr in GridView1.Rows)
-            {
-                if (dr.RowType == DataControlRowType.DataRow)
+                if (uin.Value.Length != 18)
                 {
-                    tbl.Add(new tblweapon
-                    {
-                        weapon = dr.Cells[1].Text,
-                        bore = dr.Cells[2].Text,
-                        weaponNo = dr.Cells[3].Text,
-                        ammunition = dr.Cells[4].Text,
-                        UIN = uin.Value,
-                        uploadDate = DateTime.Now.Date,
+                    lblerror.Text = "Error saving Record !! UIN No Should be 18 Digits";
 
+                    return;
+
+                }
+
+                if (getuid(uin.Value))
+                {
+                    lblerror.Text = "Error saving Record !! UIN No Already Exist";
+
+                    return;
+
+                }
+                List<tblweapon> tbl = new List<tblweapon>();
+                foreach (GridViewRow dr in GridView1.Rows)
+                {
+                    if (dr.RowType == DataControlRowType.DataRow)
+                    {
+                        tbl.Add(new tblweapon
+                        {
+                            weapon = dr.Cells[1].Text,
+                            bore = dr.Cells[2].Text,
+                            weaponNo = dr.Cells[3].Text,
+                            ammunition = dr.Cells[4].Text,
+                            UIN = uin.Value,
+                            uploadDate = DateTime.Now.Date,
+
+
+
+                        });
+                    }
+
+                }
+
+                ArmEntities db = new ArmEntities();
+                Int32 authid = Convert.ToInt32(Session["AuthId"].ToString());
+                if (ModelState.IsValid)
+                {
+                    db.tblweaponholder.Add(new tblweaponholder
+                    {
+                        UIN = uin.Value,
+                        licNo = licno.Value,
+                        licType = lictype.Value,
+                        name = name.Value,
+                        fname = fname.Value,
+                        address = add.Value,
+                        area = area.SelectedItem.Text,
+                        mobile = mobile.Value,
+                        issueDate = DateTime.Parse(doi.Value).ToString("dd-MM-YYYY"),
+                        expiryDate = DateTime.Parse(doe.Value).ToString("dd-MM-yyyy"),
+                        photo = FileUpload1.FileBytes,
+                        sign = FileUpload2.FileBytes,
+                        uploadDate = DateTime.Now.Date,
+                        tblweapon = tbl,
+                        AuthorityId = authid,
+                        imgUpdate = DateTime.Now.Date
 
 
                     });
+                    db.SaveChanges();
+                    Response.Redirect("UserMain.aspx");
                 }
-
             }
-
-            ArmEntities db = new ArmEntities();
-            Int32 authid = Convert.ToInt32(Session["AuthId"].ToString());
-            if (ModelState.IsValid)
+            catch(Exception ex)
             {
-                db.tblweaponholder.Add(new tblweaponholder
-                {
-                    UIN = uin.Value,
-                    licNo = licno.Value,
-                    licType = lictype.Value,
-                    name = name.Value,
-                    fname = fname.Value,
-                    address = add.Value,
-                    area = area.SelectedItem.Text,
-                    mobile = mobile.Value,
-                    issueDate = doi.Value,
-                    expiryDate = doe.Value,
-                    photo = FileUpload1.FileBytes,
-                    sign = FileUpload2.FileBytes,
-                    uploadDate = DateTime.Now.Date,
-                    tblweapon = tbl,
-                    AuthorityId=authid,
-                    imgUpdate = DateTime.Now.Date
-                    
 
-                });
-                db.SaveChanges();
-                Response.Redirect("UserMain.aspx");
+                Response.Write(ex.Message);
             }
         }
 

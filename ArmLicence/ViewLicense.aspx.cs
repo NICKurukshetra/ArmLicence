@@ -28,31 +28,39 @@ namespace ArmLicence
         private void bd(String uin)
         {
 
-            ArmEntities db = new ArmEntities();
+            try
+            {
+                ArmEntities db = new ArmEntities();
 
-            byte[] img, sig;
-            var i = uin;
-            var d = db.tblweaponholder.Where(u => u.UIN == i).ToList();
+                byte[] img, sig;
+                var i = uin;
+                var d = db.tblweaponholder.Where(u => u.UIN == i).ToList();
 
-            var dataset = (from u in d select new { UIN = u.UIN, Name = u.name, Father = u.fname, Licno = u.licNo, Address = u.address, Area = u.area, IssueDate = u.issueDate, Expiry = u.expiryDate });
-            DetailsView1.DataSource = dataset;
-            DetailsView1.DataBind();
+                var dataset = (from u in d select new { UIN = u.UIN, Name = u.name, Father = u.fname, Licno = u.licNo, Address = u.address, Area = u.area, IssueDate = u.issueDate, Expiry = u.expiryDate });
+                DetailsView1.DataSource = dataset;
+                DetailsView1.DataBind();
 
-            img = d[0].photo;
-            sig = d[0].sign;
-            string base64String = Convert.ToBase64String(img, 0, img.Length);
-            Image1.ImageUrl = "data:image/png;base64," + base64String;
+               /*img = d[0].photo;
+                sig = d[0].sign;
+                string base64String = Convert.ToBase64String(img, 0, img.Length);
+                Image1.ImageUrl = "data:image/png;base64," + base64String;
 
-            string base64Sign = Convert.ToBase64String(sig, 0, sig.Length);
-            Image2.ImageUrl = "data:image/png;base64," + base64Sign;
+                string base64Sign = Convert.ToBase64String(sig, 0, sig.Length);
+                Image2.ImageUrl = "data:image/png;base64," + base64Sign;*/
 
-            var dt = db.tblweapon.Where(u => u.UIN == i).ToList();
+                var dt = db.tblweapon.Where(u => u.UIN == i).ToList();
 
-            var data = (from u in dt select new { Weapon = u.weapon, Bore = u.bore, WeaponNo = u.weaponNo, Ammunition = u.ammunition });
+                var data = (from u in dt select new { Weapon = u.weapon, Bore = u.bore, WeaponNo = u.weaponNo, Ammunition = u.ammunition });
 
-            GridView2.DataSource = data;
+                //GridView2.DataSource = data;
 
-            GridView2.DataBind();
+                //GridView2.DataBind();
+            }
+            catch(Exception ex)
+            {
+
+                Response.Write(ex.Message);
+            }
         }
 
         protected void btnupdate_Click(object sender, EventArgs e)

@@ -82,14 +82,30 @@ namespace ArmLicence
                     Int32 authid = Convert.ToInt32(Session["AuthId"].ToString());
                     foreach (DataRow row in dtExcelSheet1.Rows)
                     {
-                        if (!getuid(row["uin"].ToString()) && row["uin"].ToString().Length >= 18)
+                        if (row["uin"].ToString().Length >= 18)
                         {
+
+
+                            var v1 = true;
                             List<tblweapon> tbl = new List<tblweapon>();
                             foreach (DataRow backrow in dtExcelSheet2.Rows)
                             {
 
+                               
+
+
+
+
                                 if ((row["uin"].ToString() == backrow["UIN"].ToString()))
                                 {
+
+                                    if (v1)
+                                    {
+                                        var st = backrow["UIN"].ToString();
+                                        var v = db.tblweapon.Where(uin => uin.UIN == st).ToList();
+                                        db.tblweapon.RemoveRange(v);
+                                        v1 = false;
+                                    }
 
                                     tbl.Add(new tblweapon
                                     {
@@ -114,33 +130,50 @@ namespace ArmLicence
 
                             if (tbl.Count > 0)
                             {
-                                db.tblweaponholder.Add(new tblweaponholder
+
+
+                                if (!getuid(row["uin"].ToString()))
                                 {
+                                    db.tblweaponholder.Add(new tblweaponholder
+                                    {
+
+                                        UIN = row["uin"].ToString(),
+
+                                        address = row["address"].ToString(),
+                                        area = row["area"].ToString(),
+                                        issueDate = row["issueDate"].ToString(),
+                                        expiryDate = row["expiryDate"].ToString(),
+                                        fname = row["fname"].ToString(),
+                                        name = row["name"].ToString(),
+                                        licNo = row["licNo"].ToString(),
+                                        licType = row["lictype"].ToString(),
+                                        mobile = row["mobile"].ToString(),
+                                        tblweapon = tbl,
+                                        AuthorityId = authid,
+                                        uploadDate = DateTime.Now.Date,
+
+                                    });
+
+                                }
+                                else
+                                {
+                                    var tt = row["uin"].ToString();
+                                    var tblholder = db.tblweaponholder.Where(vt => vt.UIN == tt).FirstOrDefault();
+                                    tblholder.address = row["address"].ToString();
+                                    tblholder.area = row["area"].ToString();
+                                    tblholder.issueDate = row["issueDate"].ToString();
+                                    tblholder.expiryDate = row["expiryDate"].ToString();
+                                    tblholder.fname = row["fname"].ToString();
+                                    tblholder.licNo = row["licNo"].ToString();
+                                    tblholder.licType = row["lictype"].ToString();
+                                    tblholder.mobile = row["mobile"].ToString();
+                                    tblholder.uploadDate = DateTime.Now.Date;
+
+                                }
 
 
-                                    UIN = row["uin"].ToString(),
-
-                                    address = row["address"].ToString(),
-                                    area = row["area"].ToString(),
-                                    issueDate = row["issueDate"].ToString(),
-                                    expiryDate = row["expiryDate"].ToString(),
-                                    fname = row["fname"].ToString(),
-                                    name = row["name"].ToString(),
-                                    licNo = row["licNo"].ToString(),
-                                    licType = row["lictype"].ToString(),
-                                    mobile = row["mobile"].ToString(),
-                                    tblweapon = tbl,
-                                    AuthorityId=authid,
-                                    uploadDate = DateTime.Now.Date,
-
-
-
-
-
-                                });
-
+                                //Show in Grid
                                 dt.NewRow();
-
                                 dt.Rows.Add(row["uin"].ToString(), row["name"].ToString(), row["fname"].ToString(),
                                     row["address"].ToString(), row["licNo"].ToString());
                             }
