@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ArmModel.Store" Provider="Npgsql" ProviderManifestToken="15.1" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ArmModel1.Store" Provider="Npgsql" ProviderManifestToken="15.1" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AuthorityMas">
           <Key>
             <PropertyRef Name="Authorityid" />
@@ -25,9 +25,12 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="date" Type="date" Nullable="false" />
-          <Property Name="id" Type="int4" Nullable="false" />
-          <Property Name="uid" Type="varchar" MaxLength="8000" />
+          <Property Name="uin" Type="varchar" MaxLength="8000" />
+          <Property Name="username" Type="varchar" MaxLength="8000" />
+          <Property Name="action" Type="varchar" MaxLength="8000" />
+          <Property Name="date" Type="varchar" MaxLength="8000" />
+          <Property Name="id" Type="int8" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ipaddress" Type="varchar" MaxLength="8000" />
         </EntityType>
         <EntityType Name="tbluser">
           <Key>
@@ -45,19 +48,22 @@
           <Key>
             <PropertyRef Name="UIN" />
             <PropertyRef Name="weaponNo" />
+            <PropertyRef Name="wtrnsid" />
           </Key>
           <Property Name="UIN" Type="varchar" MaxLength="18" Nullable="false" />
-          <Property Name="weapon" Type="varchar" MaxLength="50" />
+          <Property Name="weapon" Type="varchar" MaxLength="150" />
           <Property Name="bore" Type="varchar" MaxLength="20" />
-          <Property Name="weaponNo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="weaponNo" Type="varchar" MaxLength="120" Nullable="false" />
           <Property Name="ammunition" Type="varchar" MaxLength="10" />
           <Property Name="uploadDate" Type="date" />
+          <Property Name="status" Type="int4" />
+          <Property Name="wtrnsid" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="tblweaponholder">
           <Key>
-            <PropertyRef Name="UIN" />
+            <PropertyRef Name="trnsid" />
           </Key>
-          <Property Name="licNo" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="licNo" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="fname" Type="varchar" MaxLength="150" />
           <Property Name="address" Type="varchar" MaxLength="500" Nullable="false" />
@@ -73,109 +79,66 @@
           <Property Name="photo" Type="bytea" />
           <Property Name="sign" Type="bytea" />
           <Property Name="AuthorityId" Type="int4" />
-          <Property Name="status" Type="int4" />
+          <Property Name="status" Type="int4" Nullable="false" />
+          <Property Name="Remarks" Type="varchar" MaxLength="150" />
+          <Property Name="trnsid" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
-        <Association Name="tbluserback_pk">
-          <End Role="tblweaponholder" Type="Self.tblweaponholder" Multiplicity="1" />
-          <End Role="tblweapon" Type="Self.tblweapon" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblweaponholder">
-              <PropertyRef Name="UIN" />
-            </Principal>
-            <Dependent Role="tblweapon">
-              <PropertyRef Name="UIN" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="ArmModelStoreContainer">
+        <EntityContainer Name="ArmModel1StoreContainer">
           <EntitySet Name="AuthorityMas" EntityType="Self.AuthorityMas" Schema="public" store:Type="Tables" />
           <EntitySet Name="DistrictMas" EntityType="Self.DistrictMas" Schema="public" store:Type="Tables" />
           <EntitySet Name="tblloghis" EntityType="Self.tblloghis" Schema="public" store:Type="Tables" />
           <EntitySet Name="tbluser" EntityType="Self.tbluser" Schema="public" store:Type="Tables" />
           <EntitySet Name="tblweapon" EntityType="Self.tblweapon" Schema="public" store:Type="Tables" />
           <EntitySet Name="tblweaponholder" EntityType="Self.tblweaponholder" Schema="public" store:Type="Tables" />
-          <AssociationSet Name="tbluserback_pk" Association="Self.tbluserback_pk">
-            <End Role="tblweaponholder" EntitySet="tblweaponholder" />
-            <End Role="tblweapon" EntitySet="tblweapon" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ArmModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="ArmEntities" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AuthorityMas">
+          <Key>
+            <PropertyRef Name="Authorityid" />
+          </Key>
+          <Property Name="Authorityid" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="AuthorityName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Districtid" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="sign" Type="Binary" MaxLength="2147483647" FixedLength="false" />
+        </EntityType>
         <EntityType Name="tblloghis">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="date" Type="DateTime" Precision="0" Nullable="false" />
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="uid" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" />
+          <Property Name="uin" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" />
+          <Property Name="username" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" />
+          <Property Name="action" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" />
+          <Property Name="date" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ipaddress" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityContainer Name="ArmEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="tblloghis" EntityType="Self.tblloghis" />
-          <EntitySet Name="tbluser" EntityType="ArmModel.tbluser" />
-          <EntitySet Name="DistrictMas" EntityType="ArmModel.DistrictMas" />
-          <EntitySet Name="AuthorityMas" EntityType="ArmModel.AuthorityMas" />
-          <EntitySet Name="tblweapon" EntityType="ArmModel.tblweapon" />
-          <EntitySet Name="tblweaponholder" EntityType="ArmModel.tblweaponholder" />
-          <AssociationSet Name="tbluserback_pk" Association="ArmModel.tbluserback_pk">
-            <End Role="tblweaponholder" EntitySet="tblweaponholder" />
-            <End Role="tblweapon" EntitySet="tblweapon" />
-          </AssociationSet>
-        </EntityContainer>
         <EntityType Name="tbluser">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Uid" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Pass" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Mobile" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Uid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Pass" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="status" Type="Boolean" />
-          <Property Name="Authorityid" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Name="usertype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
-        </EntityType>
-        <EntityType Name="DistrictMas">
-          <Key>
-            <PropertyRef Name="Districtid" />
-          </Key>
-          <Property Name="Districtid" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
-          <Property Name="DistrictName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="AuthorityMas">
-          <Key>
-            <PropertyRef Name="Authorityid" />
-          </Key>
-          <Property Name="Authorityid" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Name="AuthorityName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Districtid" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
-          <Property Name="sign" Type="Binary" MaxLength="2147483647" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="tblweapon">
-          <Key>
-            <PropertyRef Name="UIN" />
-            <PropertyRef Name="weaponNo" />
-          </Key>
-          <Property Name="UIN" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="true" />
-          <Property Name="weapon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="bore" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="weaponNo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ammunition" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="uploadDate" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="tblweaponholder" Relationship="ArmModel.tbluserback_pk" FromRole="tblweapon" ToRole="tblweaponholder" />
+          <Property Name="Authorityid" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="usertype" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="tblweaponholder">
           <Key>
-            <PropertyRef Name="UIN" />
+            <PropertyRef Name="trnsid" />
           </Key>
-          <Property Name="licNo" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="licNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="fname" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="mobile" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
-          <Property Name="area" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="licType" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="UIN" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="true" />
+          <Property Name="area" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="licType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UIN" Type="String" MaxLength="18" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="imgUpdate" Type="DateTime" Precision="0" />
           <Property Name="printDate" Type="DateTime" Precision="0" />
           <Property Name="uploadDate" Type="DateTime" Precision="0" />
@@ -184,70 +147,119 @@
           <Property Name="photo" Type="Binary" MaxLength="2147483647" FixedLength="false" />
           <Property Name="sign" Type="Binary" MaxLength="2147483647" FixedLength="false" />
           <Property Name="AuthorityId" Type="Int32" />
-          <NavigationProperty Name="tblweapon" Relationship="ArmModel.tbluserback_pk" FromRole="tblweaponholder" ToRole="tblweapon" />
-          <Property Name="status" Type="Int32" />
+          <Property Name="status" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="trnsid" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <Association Name="tbluserback_pk">
-          <End Type="ArmModel.tblweaponholder" Role="tblweaponholder" Multiplicity="1" />
-          <End Type="ArmModel.tblweapon" Role="tblweapon" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblweaponholder">
-              <PropertyRef Name="UIN" />
-            </Principal>
-            <Dependent Role="tblweapon">
-              <PropertyRef Name="UIN" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AuthorityMas" EntityType="Self.AuthorityMas" />
+          <EntitySet Name="tblloghis" EntityType="Self.tblloghis" />
+          <EntitySet Name="tbluser" EntityType="Self.tbluser" />
+          <EntitySet Name="tblweaponholder" EntityType="Self.tblweaponholder" />
+          <EntitySet Name="DistrictMas" EntityType="ArmEntities.DistrictMas" />
+          <EntitySet Name="tblweapon" EntityType="ArmEntities.tblweapon" />
+        </EntityContainer>
+        <EntityType Name="DistrictMas">
+          <Key>
+            <PropertyRef Name="Districtid" />
+          </Key>
+          <Property Name="Districtid" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="DistrictName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblweapon">
+          <Key>
+            <PropertyRef Name="UIN" />
+            <PropertyRef Name="weaponNo" />
+            <PropertyRef Name="wtrnsid" />
+          </Key>
+          <Property Name="UIN" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="true" />
+          <Property Name="weapon" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="bore" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="weaponNo" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="ammunition" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="uploadDate" Type="DateTime" Precision="0" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="wtrnsid" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ArmModelStoreContainer" CdmEntityContainer="ArmEntities">
+        <EntityContainerMapping StorageEntityContainer="ArmModel1StoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="AuthorityMas">
+            <EntityTypeMapping TypeName="ArmEntities.AuthorityMas">
+              <MappingFragment StoreEntitySet="AuthorityMas">
+                <ScalarProperty Name="Authorityid" ColumnName="Authorityid" />
+                <ScalarProperty Name="AuthorityName" ColumnName="AuthorityName" />
+                <ScalarProperty Name="Districtid" ColumnName="Districtid" />
+                <ScalarProperty Name="sign" ColumnName="sign" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tblloghis">
-            <EntityTypeMapping TypeName="ArmModel.tblloghis">
+            <EntityTypeMapping TypeName="ArmEntities.tblloghis">
               <MappingFragment StoreEntitySet="tblloghis">
+                <ScalarProperty Name="uin" ColumnName="uin" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="action" ColumnName="action" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="uid" ColumnName="uid" />
+                <ScalarProperty Name="ipaddress" ColumnName="ipaddress" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tbluser">
-            <EntityTypeMapping TypeName="ArmModel.tbluser">
+            <EntityTypeMapping TypeName="ArmEntities.tbluser">
               <MappingFragment StoreEntitySet="tbluser">
-                <ScalarProperty Name="usertype" ColumnName="usertype" />
-                <ScalarProperty Name="Authorityid" ColumnName="Authorityid" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="Pass" ColumnName="Pass" />
-                <ScalarProperty Name="Uid" ColumnName="Uid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Uid" ColumnName="Uid" />
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="Authorityid" ColumnName="Authorityid" />
+                <ScalarProperty Name="usertype" ColumnName="usertype" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblweaponholder">
+            <EntityTypeMapping TypeName="ArmEntities.tblweaponholder">
+              <MappingFragment StoreEntitySet="tblweaponholder">
+                <ScalarProperty Name="licNo" ColumnName="licNo" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="fname" ColumnName="fname" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="mobile" ColumnName="mobile" />
+                <ScalarProperty Name="area" ColumnName="area" />
+                <ScalarProperty Name="licType" ColumnName="licType" />
+                <ScalarProperty Name="UIN" ColumnName="UIN" />
+                <ScalarProperty Name="imgUpdate" ColumnName="imgUpdate" />
+                <ScalarProperty Name="printDate" ColumnName="printDate" />
+                <ScalarProperty Name="uploadDate" ColumnName="uploadDate" />
+                <ScalarProperty Name="issueDate" ColumnName="issueDate" />
+                <ScalarProperty Name="expiryDate" ColumnName="expiryDate" />
+                <ScalarProperty Name="photo" ColumnName="photo" />
+                <ScalarProperty Name="sign" ColumnName="sign" />
+                <ScalarProperty Name="AuthorityId" ColumnName="AuthorityId" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="trnsid" ColumnName="trnsid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DistrictMas">
-            <EntityTypeMapping TypeName="ArmModel.DistrictMas">
+            <EntityTypeMapping TypeName="ArmEntities.DistrictMas">
               <MappingFragment StoreEntitySet="DistrictMas">
                 <ScalarProperty Name="DistrictName" ColumnName="DistrictName" />
                 <ScalarProperty Name="Districtid" ColumnName="Districtid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AuthorityMas">
-            <EntityTypeMapping TypeName="ArmModel.AuthorityMas">
-              <MappingFragment StoreEntitySet="AuthorityMas">
-                <ScalarProperty Name="sign" ColumnName="sign" />
-                <ScalarProperty Name="Districtid" ColumnName="Districtid" />
-                <ScalarProperty Name="AuthorityName" ColumnName="AuthorityName" />
-                <ScalarProperty Name="Authorityid" ColumnName="Authorityid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblweapon">
-            <EntityTypeMapping TypeName="ArmModel.tblweapon">
+            <EntityTypeMapping TypeName="ArmEntities.tblweapon">
               <MappingFragment StoreEntitySet="tblweapon">
+                <ScalarProperty Name="wtrnsid" ColumnName="wtrnsid" />
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="uploadDate" ColumnName="uploadDate" />
                 <ScalarProperty Name="ammunition" ColumnName="ammunition" />
                 <ScalarProperty Name="weaponNo" ColumnName="weaponNo" />
@@ -257,30 +269,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblweaponholder">
-            <EntityTypeMapping TypeName="ArmModel.tblweaponholder">
-              <MappingFragment StoreEntitySet="tblweaponholder">
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="AuthorityId" ColumnName="AuthorityId" />
-                <ScalarProperty Name="sign" ColumnName="sign" />
-                <ScalarProperty Name="photo" ColumnName="photo" />
-                <ScalarProperty Name="expiryDate" ColumnName="expiryDate" />
-                <ScalarProperty Name="issueDate" ColumnName="issueDate" />
-                <ScalarProperty Name="uploadDate" ColumnName="uploadDate" />
-                <ScalarProperty Name="printDate" ColumnName="printDate" />
-                <ScalarProperty Name="imgUpdate" ColumnName="imgUpdate" />
-                <ScalarProperty Name="UIN" ColumnName="UIN" />
-                <ScalarProperty Name="licType" ColumnName="licType" />
-                <ScalarProperty Name="area" ColumnName="area" />
-                <ScalarProperty Name="mobile" ColumnName="mobile" />
-                <ScalarProperty Name="address" ColumnName="address" />
-                <ScalarProperty Name="fname" ColumnName="fname" />
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="licNo" ColumnName="licNo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -294,8 +283,8 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

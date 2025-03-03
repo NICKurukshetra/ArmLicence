@@ -1,5 +1,10 @@
-﻿using System;
+﻿
+using OpenCvSharp;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -24,7 +29,7 @@ namespace ArmLicence
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            ArmEntities db=new ArmEntities();
+            Entities db=new Entities();
             var d = ("0" + (db.AuthorityMas.ToList().Count() + 1).ToString());
             var i = d.Substring(d.Length - 2, 2);
             db.AuthorityMas.Add(new AuthorityMas { AuthorityName=name.Value,Districtid=DropDownList1.SelectedValue,Authorityid=i,sign=FileUpload1.FileBytes});
@@ -41,7 +46,7 @@ namespace ArmLicence
             {
 
                 String authid = Session["AuthId"].ToString();
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
             var did = db.AuthorityMas.Where(i => i.Authorityid == authid).ToList();
                 string value = did[0].Districtid.ToString();
             var d = db.DistrictMas.Where(n=>n.Districtid==value).ToList();
@@ -55,7 +60,7 @@ namespace ArmLicence
            }
             else
             {
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
              
                 var d = db.DistrictMas.ToList();
 
@@ -69,7 +74,7 @@ namespace ArmLicence
 
         private void bddata()
         {
-              ArmEntities db=new ArmEntities();
+              Entities db=new Entities();
 
             if (Session["usertype"] != null && Session["usertype"].ToString() == "D")
             {
@@ -116,22 +121,48 @@ namespace ArmLicence
             FileUpload file1 = row.FindControl("FileUpload1") as FileUpload;
             TextBox text = row.FindControl("ctl02") as TextBox;
 
+           
                 
 
 
            
             {
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 var i = GridView1.DataKeys[e.RowIndex].Value.ToString();
                 var data = db.AuthorityMas.Where(u => u.Authorityid == i).ToList();
                 foreach (var u in data)
                 {
+
                     if (file1.HasFile)
                     {
-                        u.sign = file1.FileBytes;
+                        // Read the uploaded file into a byte array
+                        byte[] imageBytes;
+                        using (var binaryReader = new BinaryReader(file1.PostedFile.InputStream))
+                        {
+                            imageBytes = binaryReader.ReadBytes(file1.PostedFile.ContentLength);
+                        }
+
+                        ImageData data1 = new ImageData();
+                        // Process the image to remove the background
+                        byte[] processedImageBytes = data1.RemoveBackground(imageBytes);
+
+                        // Convert the processed image to a Base64 string
+                        string base64String = Convert.ToBase64String(processedImageBytes);
+                        string imageDataUrl = "data:image/png;base64," + base64String;
+
+                        // Display the processed image in the webpage
+                        ProcessedImage.ImageUrl = imageDataUrl;
+                        ProcessedImage.Visible = true;
+                        u.sign = processedImageBytes;
                     }
+                    //if (file1.HasFile)
+                    //{
+
+                    // var file=   ProcessImage(file1.FileName);
+                    //    u.sign = file;
+                    //}
                     u.AuthorityName = text.Text;
-                  
+
                 }
                 db.SaveChanges();
 
@@ -144,5 +175,9 @@ namespace ArmLicence
         {
             
         }
+
+
+        
     }
 }
+

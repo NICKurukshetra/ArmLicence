@@ -22,7 +22,7 @@
                 
                                 
                         
-                <asp:GridView ID="GridView1" runat="server" CssClass="table" BorderStyle="None" EmptyDataText="No Record Found" DataKeyNames="UIN" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating">
+                <asp:GridView ID="GridView1" runat="server" CssClass="table" BorderStyle="None" EmptyDataText="No Record Found" DataKeyNames="ID" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating">
                     <Columns>
                         <asp:TemplateField>
                             <EditItemTemplate>

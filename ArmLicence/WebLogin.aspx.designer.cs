@@ -33,6 +33,24 @@ namespace ArmLicence
         protected global::System.Web.UI.HtmlControls.HtmlInputPassword yourPassword;
 
         /// <summary>
+        /// imgCaptcha control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgCaptcha;
+
+        /// <summary>
+        /// code control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText code;
+
+        /// <summary>
         /// lblerro control.
         /// </summary>
         /// <remarks>

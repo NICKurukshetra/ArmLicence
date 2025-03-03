@@ -25,6 +25,9 @@
                 <div class="col-md-12">
                   <input type="text" class="form-control" placeholder="Authority Name" id="name" runat="server" required/>
                 </div>
+                    <div class="col-md-12">
+                   <asp:Image ID="ProcessedImage" runat="server" Visible="true" />
+                        </div>
                   <div class="col-md-12">
                       Authority Signature<br />
                       <asp:FileUpload ID="FileUpload1" runat="server" required/>
@@ -35,7 +38,7 @@
                    <asp:Button ID="btnReset" runat="server" CssClass="btn btn-secondary" Text="Reset" />
 
                 </div>
-
+                 
                 
                   <div class="col-md-12">
                       <asp:GridView ID="GridView1" runat="server" Width="100%" CssClass="table table-hover" DataKeyNames="ID" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowDataBound="GridView1_RowDataBound" OnRowEditing="GridView1_RowEditing" OnRowUpdating="GridView1_RowUpdating" >

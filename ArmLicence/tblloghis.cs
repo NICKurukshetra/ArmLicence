@@ -14,8 +14,11 @@ namespace ArmLicence
     
     public partial class tblloghis
     {
-        public System.DateTime date { get; set; }
-        public int id { get; set; }
-        public string uid { get; set; }
+        public string uin { get; set; }
+        public string username { get; set; }
+        public string action { get; set; }
+        public string date { get; set; }
+        public long id { get; set; }
+        public string ipaddress { get; set; }
     }
 }

@@ -4,14 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2bb665bcf8d94730ab57681093f56d5f" Name="Diagram1">
-        <EntityTypeShape EntityType="ArmModel.tblloghis" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ArmModel.tbluser" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="ArmModel.DistrictMas" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="ArmModel.AuthorityMas" Width="1.5" PointX="5" PointY="0.75" />
-        <EntityTypeShape EntityType="ArmModel.tblweapon" Width="1.5" PointX="5.625" PointY="5" />
-        <EntityTypeShape EntityType="ArmModel.tblweaponholder" Width="1.5" PointX="3.375" PointY="4" />
-        <AssociationConnector Association="ArmModel.tbluserback_pk" />
+      <Diagram DiagramId="43bab31219f4468297e191c0e6acf5ec" Name="Diagram1">
+        <EntityTypeShape EntityType="ArmEntities.AuthorityMas" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ArmEntities.tblloghis" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ArmEntities.tbluser" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ArmEntities.tblweaponholder" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ArmEntities.DistrictMas" Width="1.5" PointX="7.75" PointY="3" />
+        <EntityTypeShape EntityType="ArmEntities.tblweapon" Width="1.5" PointX="3" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

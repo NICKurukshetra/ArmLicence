@@ -77,7 +77,7 @@ namespace ArmLicence
                     new DataColumn("Add"),new DataColumn("Area"),new DataColumn("Issue"),new DataColumn("Expiry"),
                     new DataColumn("Lic No"),new DataColumn("Lic Type"),new DataColumn("Mobile") });
 
-                    ArmEntities db = new ArmEntities();
+                    Entities db = new Entities();
 
                     Int32 authid = Convert.ToInt32(Session["AuthId"].ToString());
                     foreach (DataRow row in dtExcelSheet1.Rows)
@@ -85,50 +85,47 @@ namespace ArmLicence
                         if (row["uin"].ToString().Length >= 18)
                         {
 
-
                             var v1 = true;
                             List<tblweapon> tbl = new List<tblweapon>();
+                            var gid = CommonServices.GenerateTransactionID();
                             foreach (DataRow backrow in dtExcelSheet2.Rows)
                             {
-
-                               
-
-
-
 
                                 if ((row["uin"].ToString() == backrow["UIN"].ToString()))
                                 {
 
                                     if (v1)
                                     {
-                                        var st = backrow["UIN"].ToString();
-                                        var v = db.tblweapon.Where(uin => uin.UIN == st).ToList();
+                                        //Remove all old weapons
+                                        int value = 0;
+                                        var st = backrow["UIN"].ToString().Trim();
+                                        var v = db.tblweapon.Where(uin => uin.UIN == st && uin.status==value).ToList();
                                         db.tblweapon.RemoveRange(v);
+                                        db.SaveChanges();
                                         v1 = false;
                                     }
 
                                     tbl.Add(new tblweapon
                                     {
+                                        //add weapons
                                         weapon = backrow["weapon"].ToString(),
                                         bore = backrow["bore"].ToString(),
                                         weaponNo = backrow["weaponNo"].ToString(),
                                         ammunition = backrow["ammunition"].ToString(),
                                         UIN = backrow["UIN"].ToString(),
                                         uploadDate = DateTime.Now.Date,
-
-
+                                        status=0,
+                                        wtrnsid=gid
 
                                     });
 
 
-
-
                                 }
-
 
                             }
 
-                            if (tbl.Count > 0)
+                            //if weapon exist add weapon holder
+                            //if (tbl.Count > 0)
                             {
 
 
@@ -148,26 +145,69 @@ namespace ArmLicence
                                         licNo = row["licNo"].ToString(),
                                         licType = row["lictype"].ToString(),
                                         mobile = row["mobile"].ToString(),
-                                        tblweapon = tbl,
+                                        //tblweapon = tbl,
                                         AuthorityId = authid,
                                         uploadDate = DateTime.Now.Date,
+                                        status=0,
+                                        trnsid=gid
 
                                     });
+
+                                    db.tblweapon.AddRange(tbl);
+                                    var ip = Session["userIpAddress"];
+                                    db.tblloghis.Add(new tblloghis {uin= row["uin"].ToString(), username = Session["username"].ToString(),date=DateTime.Now.ToString(),action="Upload by Excel",ipaddress=ip.ToString() });
 
                                 }
                                 else
                                 {
+
+                                    //Update
+
+                                    /*db.tblweapon.AddRange(tbl);
                                     var tt = row["uin"].ToString();
-                                    var tblholder = db.tblweaponholder.Where(vt => vt.UIN == tt).FirstOrDefault();
-                                    tblholder.address = row["address"].ToString();
-                                    tblholder.area = row["area"].ToString();
-                                    tblholder.issueDate = row["issueDate"].ToString();
-                                    tblholder.expiryDate = row["expiryDate"].ToString();
-                                    tblholder.fname = row["fname"].ToString();
-                                    tblholder.licNo = row["licNo"].ToString();
-                                    tblholder.licType = row["lictype"].ToString();
-                                    tblholder.mobile = row["mobile"].ToString();
-                                    tblholder.uploadDate = DateTime.Now.Date;
+                                    var tblholder = db.tblweaponholder.Where(vt => vt.UIN == tt).ToList();
+                                    
+                                    tblholder[0].address = row["address"].ToString();
+                                    tblholder[0].area = row["area"].ToString();
+                                    tblholder[0].issueDate = row["issueDate"].ToString();
+                                    tblholder[0].expiryDate = row["expiryDate"].ToString();
+                                    tblholder[0].name = row["name"].ToString();
+                                    tblholder[0].fname = row["fname"].ToString();
+                                    tblholder[0].licNo = row["licNo"].ToString();
+                                    tblholder[0].licType = row["lictype"].ToString();
+                                    tblholder[0].mobile = row["mobile"].ToString();
+                                    tblholder[0].uploadDate = DateTime.Now.Date;
+                                    
+
+                                    var ip = Session["userIpAddress"];
+                                    db.tblloghis.Add(new tblloghis { uin = row["uin"].ToString(), username = Session["username"].ToString(), date = DateTime.Now.ToString(), action = "Updatd by Excel" , ipaddress = ip.ToString() });*/
+
+                                    //remove and insert
+                                    db.tblweaponholder.Add(new tblweaponholder
+                                    {
+
+                                        UIN = row["uin"].ToString(),
+
+                                        address = row["address"].ToString(),
+                                        area = row["area"].ToString(),
+                                        issueDate = row["issueDate"].ToString(),
+                                        expiryDate = row["expiryDate"].ToString(),
+                                        fname = row["fname"].ToString(),
+                                        name = row["name"].ToString(),
+                                        licNo = row["licNo"].ToString(),
+                                        licType = row["lictype"].ToString(),
+                                        mobile = row["mobile"].ToString(),
+                                        //tblweapon = tbl,
+                                        AuthorityId = authid,
+                                        uploadDate = DateTime.Now.Date,
+                                        status = 0,
+                                        trnsid = gid
+
+                                    });
+
+                                    db.tblweapon.AddRange(tbl);
+                                    var ip = Session["userIpAddress"];
+                                    db.tblloghis.Add(new tblloghis { uin = row["uin"].ToString(), username = Session["username"].ToString(), date = DateTime.Now.ToString(), action = "Upload by Excel", ipaddress = ip.ToString() });
 
                                 }
 
@@ -175,7 +215,8 @@ namespace ArmLicence
                                 //Show in Grid
                                 dt.NewRow();
                                 dt.Rows.Add(row["uin"].ToString(), row["name"].ToString(), row["fname"].ToString(),
-                                    row["address"].ToString(), row["licNo"].ToString());
+                                    row["address"].ToString(),  row["area"].ToString(), row["issueDate"].ToString(),
+                                    row["expiryDate"].ToString(), row["licNo"].ToString(), row["lictype"].ToString(), row["mobile"].ToString());
                             }
 
                         }
@@ -202,9 +243,17 @@ namespace ArmLicence
 
         bool getuid(String id)
         {
-            ArmEntities db = new ArmEntities();
-            var d = db.tblweaponholder.Where(e => e.UIN == id).ToList().Count()>0;
-            return d;
+            Entities db = new Entities();
+            int value = 0;
+            var d = db.tblweaponholder.Where(e => e.UIN == id && e.status==value).ToList();
+            var v = d.Count>0;
+            if (d.Count > 0)
+            {
+                db.tblweaponholder.RemoveRange(d);
+                db.SaveChanges();
+                
+            }
+            return v;
 
         }
     }

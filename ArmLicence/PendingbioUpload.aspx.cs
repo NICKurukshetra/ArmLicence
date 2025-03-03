@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -21,7 +22,7 @@ namespace ArmLicence
         private void loaddata()
         {
 
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
 
             
             
@@ -29,7 +30,7 @@ namespace ArmLicence
                 // var d = (from u in db.tbluserdata where u.id>0 &&   u.UIN.Equals(i) select new { u.UIN, Name = u.name, Father = u.fname }).ToList();
                 var d = db.tblweaponholder.Where(u => !u.imgUpdate.HasValue).ToList();
 
-                var data = (from u in d select new { u.UIN, Name = u.name});
+                var data = (from u in d select new { u.UIN, Name = u.name,ID=u.trnsid});
 
 
                 GridView1.DataSource = data;
@@ -58,15 +59,19 @@ namespace ArmLicence
             FileUpload file2 = row.FindControl("FileUpload2") as FileUpload;
             if(file1.HasFile && file2.HasFiles)
             {
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 var i = GridView1.DataKeys[e.RowIndex].Value.ToString();
-                var data = db.tblweaponholder.Where(u => u.UIN ==i ).ToList();
+                var data = db.tblweaponholder.Where(u => u.trnsid ==i ).ToList();
                 foreach (var u in data)
                 {
                     u.photo = file1.FileBytes;
                     u.sign = file2.FileBytes;
                     u.imgUpdate = DateTime.Now.Date;
                 }
+
+                var ip = Session["userIpAddress"];
+                
+                db.tblloghis.Add(new tblloghis { uin = i, username = Session["username"].ToString(), date = DateTime.Now.ToString(), action = "Photo Sign Updated",ipaddress=ip.ToString() });
                 db.SaveChanges();
 
                 GridView1.EditIndex = -1;

@@ -16,7 +16,7 @@ namespace ArmLicence
             {
                 if (Session["AuthId"] != null )
                 {
-                    ArmEntities db = new ArmEntities();
+                    Entities db = new Entities();
 
                     Int64 authid = Convert.ToInt64(Session["AuthId"].ToString());
                     var d = db.tblweaponholder.Where(u => u.imgUpdate.HasValue && u.AuthorityId == authid && u.printDate!=null).ToList();
@@ -35,7 +35,7 @@ namespace ArmLicence
         protected void btnsearch_Click(object sender, EventArgs e)
         {
 
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
 
             if (txtuin.Value.Length > 0)
             {

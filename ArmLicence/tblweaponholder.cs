@@ -14,12 +14,6 @@ namespace ArmLicence
     
     public partial class tblweaponholder
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tblweaponholder()
-        {
-            this.tblweapon = new HashSet<tblweapon>();
-        }
-    
         public string licNo { get; set; }
         public string name { get; set; }
         public string fname { get; set; }
@@ -36,9 +30,8 @@ namespace ArmLicence
         public byte[] photo { get; set; }
         public byte[] sign { get; set; }
         public Nullable<int> AuthorityId { get; set; }
-        public Nullable<int> status { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblweapon> tblweapon { get; set; }
+        public int status { get; set; }
+        public string Remarks { get; set; }
+        public string trnsid { get; set; }
     }
 }

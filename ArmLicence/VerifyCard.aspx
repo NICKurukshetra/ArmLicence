@@ -23,7 +23,7 @@
                 
                                 
                         
-                <asp:GridView ID="GridView1" runat="server" CssClass="table table-hover" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" EmptyDataText="No Record Found" DataKeyNames="UIN">
+                <asp:GridView ID="GridView1" runat="server" CssClass="table table-hover" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" EmptyDataText="No Record Found" DataKeyNames="ID">
                     <Columns>
                         <asp:CommandField SelectText="View" ShowSelectButton="True"></asp:CommandField>
                     </Columns>

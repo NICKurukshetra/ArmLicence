@@ -20,7 +20,7 @@ namespace ArmLicence
         public string weaponNo { get; set; }
         public string ammunition { get; set; }
         public Nullable<System.DateTime> uploadDate { get; set; }
-    
-        public virtual tblweaponholder tblweaponholder { get; set; }
+        public Nullable<int> status { get; set; }
+        public string wtrnsid { get; set; }
     }
 }

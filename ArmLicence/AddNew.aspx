@@ -19,8 +19,7 @@
     <div class="pagetitle">
       
     </div><!-- End Page Title -->
-
-        
+       
     <div class="section">
         <form runat="server" id="form1">
       <div class="row">
@@ -30,9 +29,19 @@
             <div class="card-body">
               <h5 class="card-title">Add Holder Data</h5>
                  <asp:Label ID="lblerror" runat="server" Text="" CssClass="text-bg-danger"></asp:Label>
+
+                <asp:Literal ID="Literal1" runat="server"></asp:Literal>
               <!-- No Labels Form -->
               <div class="row g-3">
                 
+                  <div class="col-md-6">
+                  
+                  
+                  
+                <asp:Button ID="btnsearch" formnovalidate runat="server" CssClass="btn btn-primary" Text="Fetch by UIN" OnClick="btnsearch_Click" />
+                </div>
+ <div class="col-md-4"></div>
+
                 <div class="col-md-6">
                       <label for="inputNanme4" class="form-label">UIN No (18 Digits)</label>
                   
@@ -85,7 +94,10 @@
                      <label for="inputNanme4" class="form-label">Date of Expiry (DD/MM/YYYY)</label>
                  <input  class="form-control"  type="date" runat="server" id="doe" required>
                 </div>
-                
+                <div class="col-12">
+                    <label for="inputNanme4" class="form-label">Special Remarks</label>
+                    <textarea class="form-control"  id="txtremarks" placeholder="remarks if any" style="height: 30px;" runat="server"></textarea>
+                </div>
                    
                  
                   <div class="col-md-3">
@@ -124,7 +136,7 @@
                 </div>
                   
                    <div class="col-md-2">
-                       <asp:Button ID="btnadd" runat="server" Text="Add Row" OnClick="btnadd_Click"  formnovalidate/>
+                       <asp:Button ID="btnadd" runat="server" Text="Add Weapon" OnClick="btnadd_Click"  formnovalidate/>
                        
                    </div>
                   <div class="col-md-12">
@@ -146,7 +158,7 @@
 
                    <div class="col-md-6">
                         <label for="inputText" class="col-sm-4 col-form-label">Upload Photo</label>
-                        <asp:FileUpload ID="FileUpload1" runat="server" required OnUnload="FileUpload1_Unload"/>
+                        <asp:FileUpload ID="FileUpload1" runat="server" required/>
                 </div>
                 <div class="col-md-6">
                  <label for="inputText" class="col-sm-6 col-form-label">Upload Signature</label>

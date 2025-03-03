@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
+using System.Web.DynamicData;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -102,26 +104,28 @@ namespace ArmLicence
             GridView1.DataBind();
         }
 
-        protected void btnSave_Click(object sender, EventArgs e)
+        protected  void btnSave_Click(object sender, EventArgs e)
         {
             try
             {
 
                 if (uin.Value.Length != 18)
                 {
-                    lblerror.Text = "Error saving Record !! UIN No Should be 18 Digits";
-
+                    //lblerror.Text = "Error saving Record !! UIN No Should be 18 Digits";
+                    Literal1.Text= CommonServices.ShowAlert(CommonServices.Alerts.Danger, "UIN No Should be 18 Digits");
                     return;
 
                 }
 
+                //check unprinted entry exist
                 if (getuid(uin.Value))
                 {
-                    lblerror.Text = "Error saving Record !! UIN No Already Exist";
-
+                    //lblerror.Text = "Error saving Record !! UIN No Already Exist";
+                    Literal1.Text = CommonServices.ShowAlert(CommonServices.Alerts.Danger, "Error saving Record !! UIN No Already Exist");
                     return;
 
                 }
+                var gid= CommonServices.GenerateTransactionID();
                 List<tblweapon> tbl = new List<tblweapon>();
                 foreach (GridViewRow dr in GridView1.Rows)
                 {
@@ -135,18 +139,36 @@ namespace ArmLicence
                             ammunition = dr.Cells[4].Text,
                             UIN = uin.Value,
                             uploadDate = DateTime.Now.Date,
+                            //transcaston no
+                            wtrnsid = gid,
+                            //entry status 0 verify 1 print 2
+                            status=0
 
 
 
                         });
+                        
                     }
 
                 }
 
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 Int32 authid = Convert.ToInt32(Session["AuthId"].ToString());
                 if (ModelState.IsValid)
                 {
+
+                    byte[] imageBytes;
+                    using (var binaryReader = new BinaryReader(FileUpload2.PostedFile.InputStream))
+                    {
+                        imageBytes = binaryReader.ReadBytes(FileUpload2.PostedFile.ContentLength);
+                    }
+
+                    ImageData imageData = new ImageData();
+
+                    byte[] processedImageBytes = imageData.RemoveBackground(imageBytes);
+
+
+
                     db.tblweaponholder.Add(new tblweaponholder
                     {
                         UIN = uin.Value,
@@ -157,24 +179,46 @@ namespace ArmLicence
                         address = add.Value,
                         area = area.SelectedItem.Text,
                         mobile = mobile.Value,
-                        issueDate = DateTime.Parse(doi.Value).ToString("dd-MM-YYYY"),
+                        issueDate = DateTime.Parse(doi.Value).ToString("dd-MM-yyyy"),
                         expiryDate = DateTime.Parse(doe.Value).ToString("dd-MM-yyyy"),
+                        
                         photo = FileUpload1.FileBytes,
-                        sign = FileUpload2.FileBytes,
+                        sign = processedImageBytes,
                         uploadDate = DateTime.Now.Date,
-                        tblweapon = tbl,
+                        //tblweapon = tbl,
                         AuthorityId = authid,
-                        imgUpdate = DateTime.Now.Date
+                        imgUpdate = DateTime.Now.Date,
+                        Remarks = txtremarks.Value,
+                        //entry status 0 verify 1 print 2
+                        status = 0,
+                        //transcaston no
+                        trnsid = gid,
+
+
 
 
                     });
+                    if(GridView1.Rows.Count>0)
+                    {
+
+                        db.tblweapon.AddRange(tbl);
+                    }
+                    var ip = Session["userIpAddress"];
+                    db.tblloghis.Add(new tblloghis { uin = uin.Value, username = Session["username"].ToString(), date = DateTime.Now.ToString(), action = "Manual Entry for UIN",ipaddress=ip.ToString()   });
                     db.SaveChanges();
-                    Response.Redirect("UserMain.aspx");
+                    Literal literal = this.Master.FindControl("Literalmaster") as Literal;
+
+                    literal.Text = CommonServices.ShowAlert(CommonServices.Alerts.Success, "Your Record Saved Succefully !!");
+                    
+                    
+                    //Response.Redirect("UserMain.aspx");
+
+                    clear();
                 }
             }
             catch(Exception ex)
             {
-
+                Literal1.Text = CommonServices.ShowAlert(CommonServices.Alerts.Danger, ex.Message);
                 Response.Write(ex.Message);
             }
         }
@@ -186,6 +230,7 @@ namespace ArmLicence
 
         protected void btnReset_Click(object sender, EventArgs e)
         {
+            
             clear();
 
         }
@@ -207,17 +252,62 @@ namespace ArmLicence
             weaponno.Value = "";
             bore.Value = "";
             Ammunition.Value = "";
+            
         }
 
 
         bool getuid(String id)
         {
-            ArmEntities db = new ArmEntities();
-            var d = db.tblweaponholder.Where(e => e.UIN == id).ToList().Count() > 0;
+            //check unprinted entry exist 
+            Int64 i =0;
+            Entities db = new Entities();
+            var d = db.tblweaponholder.Where(e => e.UIN == id && e.status==i).ToList().Count() > 0;
             return d;
 
         }
 
+        protected void btnsearch_Click(object sender, EventArgs e)
+        {
+            Entities db = new Entities();
+
+            String ui = uin.Value;
+            
+
+            try
+            {
+                var d = db.tblweaponholder.Where(u => u.UIN == ui).OrderByDescending(i => i.uploadDate).ToList();
+
+                if (d != null)
+                {
+                    licno.Value = d[0].licNo;
+                    name.Value = d[0].name;
+                    fname.Value = d[0].fname;
+                    add.Value = d[0].address;
+                    mobile.Value = d[0].mobile;
+                    area.SelectedItem.Text = d[0].area;
+                    lictype.Value = d[0].licType;
+                    doi.Value = d[0].issueDate;
+                    doe.Value = d[0].expiryDate;
+
+                    var wtrn = d[0].trnsid;
+
+                    var tblweapon = db.tblweapon.Where(u => u.wtrnsid == wtrn).ToList();
+                    var data = (from u in tblweapon select new { Weapon = u.weapon, Bore = u.bore, WeaponNo = u.weaponNo, Ammunition = u.ammunition });
+
+                    GridView1.DataSource = data;
+                    GridView1.DataBind();
+                }
+                else
+                {
+                    // Handle the case where no weapon with the specified UIN was found
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately, such as logging the error
+                Console.WriteLine("An error occurred while retrieving the weapon: " + ex.Message);
+            }
+        }
     }
 
 

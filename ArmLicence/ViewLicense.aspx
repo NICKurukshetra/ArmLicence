@@ -40,8 +40,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <asp:Panel ID="Panel1" runat="server">
-                            <asp:Button ID="btnupdate" runat="server" Text="Verify Record" CssClass="btn btn-danger"  onClientClick=" return confirm('Are you sure?')" OnClick="btnupdate_Click" />
-
+                            <asp:Button ID="btnupdate" runat="server" Text="Verify & Accept Record" CssClass="btn btn-warning"  onClientClick=" return confirm('Are you sure?')" OnClick="btnupdate_Click" />
+                                <asp:Button ID="btnreject" runat="server" Text="Reject Record" CssClass="btn btn-danger"  onClientClick=" return confirm('Are you sure You Want to Reject?')" OnClick="btnreject_Click" />
 
                           <a href="VerifyCard.aspx" class="btn btn-info">Back</a>
                        </asp:Panel>

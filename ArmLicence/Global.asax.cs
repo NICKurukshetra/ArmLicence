@@ -20,7 +20,7 @@ namespace ArmLicence
 
         void Session_Start(object sender, EventArgs e)
         {
-            Response.Redirect("WebLogin");
+            string sessionId = Session.SessionID;
         }
 
         

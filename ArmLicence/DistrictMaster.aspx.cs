@@ -20,7 +20,7 @@ namespace ArmLicence
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
             var d = ("0" + (db.DistrictMas.ToList().Count() + 1).ToString());
             var i = d.Substring(d.Length - 2, 2);
             db.DistrictMas.Add(new DistrictMas {  DistrictName=name.Value,Districtid=i});
@@ -31,7 +31,7 @@ namespace ArmLicence
 
         private void bddata()
         {
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
             var dataset = db.DistrictMas.ToList();
 
 

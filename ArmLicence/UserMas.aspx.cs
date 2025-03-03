@@ -23,10 +23,10 @@ namespace ArmLicence
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            ArmEntities db = new ArmEntities();
-            var d = db.tbluser.ToList().Count() + 1;
+            Entities db = new Entities();
+            int d = db.tbluser.ToList().Count() + 1;
             
-            db.tbluser.Add(new tbluser { Authorityid=DropDownList1.SelectedValue,Mobile=mobile.Value,Pass=pass.Value,Uid=uid.Value,usertype=DropDownList2.SelectedValue,Id=d });
+            db.tbluser.Add(new tbluser { Id = d, Authorityid = DropDownList1.SelectedValue,Mobile=mobile.Value,Pass=pass.Value,Uid=uid.Value,usertype=DropDownList2.SelectedValue });
             db.SaveChanges();
 
             clear();
@@ -40,7 +40,7 @@ namespace ArmLicence
             {
 
                 String authid = Session["AuthId"].ToString();
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 var did = db.AuthorityMas.Where(i => i.Authorityid == authid).ToList();
 
 
@@ -56,7 +56,7 @@ namespace ArmLicence
             }
             else
             {
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
 
                 var d = db.AuthorityMas.ToList();
 
@@ -78,7 +78,7 @@ namespace ArmLicence
                 String authid = Session["AuthId"].ToString();
 
 
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
 
                 var dataset = db.tbluser.Where(n => n.Authorityid == authid).ToList();
                 var data = (from u in dataset select new { Id = u.Id, User = u.Uid, Password = u.Pass, Mobile = u.Mobile });
@@ -88,7 +88,7 @@ namespace ArmLicence
             }
             else
             {
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 var dataset = db.tbluser.ToList();
 
                 GridView1.DataSource = dataset;
@@ -117,7 +117,7 @@ namespace ArmLicence
 
 
            
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 var i = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Value);
                 var data = db.tbluser.Where(u => u.Id ==i).ToList();
                 foreach (var u in data)

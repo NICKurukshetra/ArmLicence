@@ -23,9 +23,9 @@ namespace ArmLicence
             {
                 byte[] img, sig,authsign;
 
-                ArmEntities db = new ArmEntities();
+                Entities db = new Entities();
                 var i = Session["uin"].ToString();
-                var d = db.tblweaponholder.Where(u => u.UIN == i).ToList();
+                var d = db.tblweaponholder.Where(u => u.trnsid == i).ToList();
 
                 if (d.Count > 0)
                 {
@@ -55,7 +55,8 @@ namespace ArmLicence
                 //Literal1.Text = "<img src='img/" + d[0].UIN.ToString() + ".jpg' width='200' height='237' />";
                 // Literal1.Text = "<img src='img/" + d[0].uin.ToString() + ".png' width='200' height='237' />";
 
-                String txtdata = "Uin:" + d[0].UIN + "\nName:" + d[0].name + "\nFName:" + d[0].fname + "\nAdd:" + d[0].address + "\nDate of Issue:" + d[0].issueDate + "\nDate of Expiry:" + d[0].expiryDate+ "\nURL: " + "http://103.87.24.58/ArmLicence/ViewLicense?uin=" + d[0].UIN;
+                String txtdata = "Uin:" + d[0].UIN + "\nName:" + d[0].name  + "\nDate of Expiry:" + d[0].expiryDate + "\nArea of Validity:" + d[0].area;
+                //String txtdata = "Uin:" + d[0].UIN + "\nName:" + d[0].name + "\nFName:" + d[0].fname + "\nAdd:" + d[0].address + "\nDate of Issue:" + d[0].issueDate + "\nDate of Expiry:" + d[0].expiryDate + "\nURL: " + "http://103.87.24.58/ArmLicence/ViewLicense?uin=" + d[0].UIN;
 
                 string s= barcode(txtdata);
                 Image3.ImageUrl = "data:image/png;base64," + s;
@@ -72,7 +73,22 @@ namespace ArmLicence
 
                     
                         lblauthority.Text = auth[0].AuthorityName;
+
+                        var distid = auth[0].Districtid;
+
+
+
+                        var distt = db.DistrictMas.Where(t => t.Districtid == distid).ToList();
+                        if (distt.Count > 0)
+                        {
+                            
+
+
+                            lblpolice.Text = distt[0].DistrictName.ToUpper()+" POLICE";
+                        }
                     }
+
+                   
                 }
 
                 else
@@ -85,7 +101,7 @@ namespace ArmLicence
 
 
 
-                var dt = db.tblweapon.Where(u => u.UIN == i).ToList();
+                var dt = db.tblweapon.Where(u => u.wtrnsid == i).ToList();
 
                 var data = (from u in dt select new { Weapon= u.weapon, Bore = u.bore,WeaponNo=u.weaponNo,  Ammunition = u.ammunition });
 
@@ -95,6 +111,11 @@ namespace ArmLicence
                 GridView1.DataBind();
 
             }
+            else
+            {
+                Response.Redirect("WebLogin.aspx");
+
+            }
             //else
             //{
 
@@ -102,7 +123,7 @@ namespace ArmLicence
             //    {
             //        byte[] img, sig;
 
-            //        ArmEntities db = new ArmEntities();
+            //        Entities db = new Entities();
             //        var i = Request.QueryString["uin"].ToString();
             //        var d = db.tblweaponholder.Where(u => u.UIN == i).ToList();
 
@@ -135,7 +156,7 @@ namespace ArmLicence
 
             //        GridView1.DataBind();
 
-              // }
+            // }
             //}
 
 
@@ -158,14 +179,18 @@ namespace ArmLicence
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
             string uid = (Session["uin"]).ToString();
-            var data = db.tblweaponholder.Where(u => u.UIN == uid).ToList();
+            var data = db.tblweaponholder.Where(u => u.trnsid == uid).ToList();
             foreach (var u in data)
             {
                 u.printDate = DateTime.Now.Date;
+                u.status= 2;
 
             }
+
+            var ip = Session["userIpAddress"];
+            db.tblloghis.Add(new tblloghis { uin = uid, username = Session["username"].ToString(), date = DateTime.Now.ToString(), action = "Uin Record Printed", ipaddress = ip.ToString() });
             db.SaveChanges();
         }
     }

@@ -13,10 +13,10 @@ namespace ArmLicence
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class ArmEntities : DbContext
+    public partial class Entities : DbContext
     {
-        public ArmEntities()
-            : base("name=ArmEntities")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
@@ -25,11 +25,11 @@ namespace ArmLicence
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AuthorityMas> AuthorityMas { get; set; }
         public virtual DbSet<tblloghis> tblloghis { get; set; }
         public virtual DbSet<tbluser> tbluser { get; set; }
-        public virtual DbSet<DistrictMas> DistrictMas { get; set; }
-        public virtual DbSet<AuthorityMas> AuthorityMas { get; set; }
-        public virtual DbSet<tblweapon> tblweapon { get; set; }
         public virtual DbSet<tblweaponholder> tblweaponholder { get; set; }
+        public virtual DbSet<DistrictMas> DistrictMas { get; set; }
+        public virtual DbSet<tblweapon> tblweapon { get; set; }
     }
 }

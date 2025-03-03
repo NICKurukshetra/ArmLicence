@@ -16,7 +16,7 @@ namespace ArmLicence
             {
                 if (Session["AuthId"] != null )
                 {
-                    ArmEntities db = new ArmEntities();
+                    Entities db = new Entities();
 
                     Int64 authid = Convert.ToInt64(Session["AuthId"].ToString());
 
@@ -24,7 +24,7 @@ namespace ArmLicence
 
                     var d = db.tblweaponholder.Where(u => u.imgUpdate.HasValue && u.AuthorityId == authid && u.status==id).ToList();
 
-                    var data = (from u in d select new { u.UIN, Name = u.name, Father = u.fname });
+                    var data = (from u in d select new { u.UIN, Name = u.name, Father = u.fname,ID=u.trnsid });
 
 
                     GridView1.DataSource = data;
@@ -38,7 +38,7 @@ namespace ArmLicence
         protected void btnsearch_Click(object sender, EventArgs e)
         {
 
-            ArmEntities db = new ArmEntities();
+            Entities db = new Entities();
 
             if (txtuin.Value.Length > 0)
             {
@@ -48,7 +48,7 @@ namespace ArmLicence
                 Int32? id = 1;
                 var d = db.tblweaponholder.Where(u => u.UIN == i && u.AuthorityId == authid && u.status == id).ToList();
 
-                var data = (from u in d select new { u.UIN, Name = u.name, Father = u.fname });
+                var data = (from u in d select new { u.UIN, Name = u.name, Father = u.fname,ID=u.trnsid });
 
 
                 GridView1.DataSource = data;
@@ -61,11 +61,11 @@ namespace ArmLicence
 
         protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (txtuin.Value.Length>1 & GridView1.Rows.Count>0)
+            /*if (txtuin.Value.Length>1 & GridView1.Rows.Count>0)
             { 
             Session["uin"] = (txtuin.Value);
                 Response.Redirect("Sprint.aspx");
-            }
+            }*/
             if (GridView1.DataKeys[GridView1.SelectedRow.RowIndex].Value!=null)
             {
                 Session["uin"] = GridView1.DataKeys[GridView1.SelectedRow.RowIndex].Value.ToString();

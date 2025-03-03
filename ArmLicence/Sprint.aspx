@@ -16,19 +16,21 @@
         @media print {
 
             .btn {
-                visibility: hidden;
+               display:none;
             }
         }
 
             .style2 {
                 font-size: 16px;
-                font-family: 'Times New Roman';
+                font-family:'Times New Roman', Times, serif;
                 font-weight: bold;
-                color: brown
+                color: #A80F0C;
+    position: relative;
+    top: 6px;
             }
 
             .style13 {
-                font-size: 5px
+                font-size: 7px
             }
 
             .style3 {
@@ -42,7 +44,9 @@
 
             .style10 {
                 font-size: 8px;
-                font-weight: bold
+                font-weight: bold;
+                display: block;
+    padding-top: 12px;
             }
 
             .style4 {
@@ -86,16 +90,6 @@
 
 
 
-            .auto-style3 {
-                text-align: center;
-            }
-
-
-
-
-
-
-
             .auto-style4 {
                 text-align: left;
             }
@@ -105,32 +99,52 @@
       
         
 
+        .auto-style5 {
+            font-size: 12px;
+        }
+        
+        
+
+      
+        
+
         </style>
 
  
-
+     <script>
+         // Add an event listener for the 'keydown' event on the document
+         document.addEventListener('keydown', function (event) {
+             // Check if Ctrl key (or Cmd key on Mac) and 'P' key are pressed
+             if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+                 // Prevent the default print action
+                 event.preventDefault();
+             }
+         });
+     </script>
     <script type="text/javascript">
-    function PrintPage() {
+        function PrintPage() {
+
         window.print();
     }
     </script>
 </head>
-<body style="font-family:Arial, Helvetica, sans-serif;background-color:darkgray;text-align:center">
+<body style="font-family:Arial, Helvetica,sans-serif;margin:3px;text-align:center">
     <form id="form1" runat="server">
         <div class="auto-style4" id="divid">
-       <table width="324px" height="205px" border="0"  style="border-collapse: collapse;" class="frontimg" cellpadding="0px" border-spacing="opx"
+       <table width="320px" height="195px" border="0"  style="border-collapse: collapse;" class="frontimg" cellpadding="0px" border-spacing="opx"
        cellspacing="0px">
   <tr>
-    <td  rowspan="2" style="text-align:center;" class="style3"><img src="img/header_img.png" width="28px"  /><br />Kurukshetra Police</td>
-    <td style="text-align:right" class="style2"> ARMS LICENSE&nbsp;&nbsp;</td>
+    <td  rowspan="2" style="text-align:center;" class="style3"><img src="img/header_img.png" width="28px"  /><br /><strong><asp:Label ID="lblpolice" runat="server" Text="Label"></asp:Label> </strong> </td>
+    <td style="text-align:right" class="style2"> ARMS LICENSE  </td>
   </tr>
   <tr>
-    <td style="text-align:right" class="style3">Lic No.
-        <asp:Label ID="lbllicno" runat="server" Text="Label"></asp:Label> &nbsp;&nbsp; </td>
+    <td style="text-align:right" class="style3"><strong>Lic No</strong>.
+        <strong>
+        <asp:Label ID="lbllicno" runat="server" Text="Label"></asp:Label> </strong>&nbsp;&nbsp; </td>
   </tr>
   <tr height="5px">
-    <td colspan="1" style="padding-right:10px" class="auto-style2">
-        <asp:Image ID="Image1" runat="server" Width="80px"/>
+    <td colspan="1" style="padding-right:7px" class="auto-style2">
+        <asp:Image ID="Image1" runat="server" Width="80px" Height="80px"/>
         <br />
         <asp:Image ID="Image2" runat="server" Width="80px" Height="20px"/>
 
@@ -144,10 +158,10 @@
         Name<br />
      
           <asp:Label ID="lblname" runat="server" Text="Label" CssClass="style9"></asp:Label></td>
-                <td class="auto-style1" rowspan="4">
+                <td class="auto-style1" rowspan="4" style="vertical-align:top">
       
 
-        <asp:Image ID="Image3" runat="server" Width="70px"/> 
+        <asp:Image ID="Image3" runat="server" Width="95px"/> 
       
 
                 </td>
@@ -177,8 +191,9 @@
        
     <td  colspan="2" >
         <table style="width:100%">
-            <tr style="vertical-align:top">
-                <td><span class="style3">UIN <asp:Label ID="lbluin" runat="server" Text="Label"></asp:Label></span></td>
+            <tr style="position:relative;bottom:10px;">
+                <td style="font-weight:bold;font-size:10px"><span class="style3">UIN<br />
+                    <asp:Label ID="lbluin" runat="server" Text="Label" CssClass="auto-style5"></asp:Label></span></td>
                 <td class="style3">Date of Issue<br />
         <span class="style9"> <asp:Label ID="lbldoi" runat="server" Text="Label"></asp:Label></span> </td>
                 <td class="style3">Date of Expiry <br />
@@ -190,8 +205,8 @@
   </table>
 
 
-        <br />
-      <table width="324px" height="205px" border="0"  class="backimg" cellpadding="0px" border-spacing="opx"
+       
+      <table width="320px" height="195px" border="0"  class="backimg" style="padding-top:5px" cellpadding="0px" border-spacing="opx"
        cellspacing="0px">
   <tr style="height:70%">
        
@@ -203,7 +218,7 @@
     <td>
 
         
-        <asp:GridView ID="GridView1" runat="server" Width="100%" CssClass="style4"  >
+        <asp:GridView ID="GridView1" runat="server" Width="100%" CssClass="style4" style="border:thin;text-align:center;"  >
         </asp:GridView>
         
       </td>
@@ -222,10 +237,12 @@
        
     <td class="style10" style="text-align:center">
         
-        <asp:Image ID="Image4" runat="server" Height="15px" Width="60px" />
-                <br />
+        <asp:Image ID="Image4" runat="server"  Width="100px" />
+            <br />    
         
-        Signature of issuing Authority</td>
+        Signature of issuing Authority
+
+    </td>
        
     <td >
         
@@ -251,9 +268,10 @@
   </tr>
   </table>
         </div>
-        <br />
-        <asp:Button ID="Button1" runat="server" Text="Prnit" CssClass="btn" OnClientClick="javascript:PrintPage();" OnClick="Button1_Click"/>
-   
+       
+        <asp:Button ID="Button1" runat="server" Text="Print" CssClass="btn" OnClientClick="javascript:PrintPage();" OnClick="Button1_Click"/>
+
+    
         <a href="UserMain.aspx"><button type="button"  class="btn"> Close</button></a>
     </form>
 </body>
